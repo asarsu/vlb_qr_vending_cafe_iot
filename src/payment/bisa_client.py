@@ -75,20 +75,23 @@ class BisaApiClient:
         }
 
         try:
-            print(f"[API QR] Solicitando QR para Bs {monto:.2f} | Alias: {alias_dinamico}")
+            print(f"[API QR] Solicitando QR para Bs {monto:.2f} | Alias: {alias_dinamico} | Callback: {self.config.webhook_callback_url}")
             resp = requests.post(url, headers=headers, data=json.dumps(payload), timeout=10)
+            print(f"[API QR] Status: {resp.status_code} | Respuesta: {resp.text}")
             if resp.status_code == 200:
                 data = resp.json()
                 if data.get("codigo") == "0000":
                     return data["objeto"]["imagenQr"], alias_dinamico
                 else:
-                    print(f"[API QR] Error de servicio: {data.get('mensaje')}")
+                    print(f"[API QR ERROR] Error de servicio banco BISA: {data.get('mensaje')} (código: {data.get('codigo')})")
             elif resp.status_code == 401:
                 print("[API QR] Token expirado, reintentando...")
                 if self.obtener_token():
                     return self.generar_qr(monto)
+            else:
+                print(f"[API QR ERROR] Código HTTP inesperado: {resp.status_code} - {resp.text}")
         except Exception as e:
-            print(f"[API ERROR] Error en generaQr: {e}")
+            print(f"[API ERROR] Excepción de conexión en generaQr: {e}")
 
         return None, None
 
