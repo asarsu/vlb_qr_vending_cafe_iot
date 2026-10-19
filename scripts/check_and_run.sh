@@ -161,22 +161,26 @@ lanzar_aplicacion() {
     export DISPLAY="${DISPLAY_VALUE:-:0}"
     export XAUTHORITY="${XAUTHORITY:-/home/pi/.Xauthority}"
 
-    # Esperar activamente a que el servidor de video X11 esté listo (hasta 30 segundos)
-    local x_intento=1
-    while [ "$x_intento" -le 30 ]; do
-        if xset q >/dev/null 2>&1 || xhost >/dev/null 2>&1; then
-            log_info "Servidor X11 detectado y accesible en $DISPLAY."
-            break
-        fi
-        log_warn "Esperando a que el servidor X11 esté disponible (intento $x_intento/30)..."
-        sleep 1
-        x_intento=$((x_intento + 1))
-    done
+    # En Ubuntu Server, no hay entorno gráfico por defecto.
+    # Verificamos si X11 ya está corriendo:
+    if ! xset q >/dev/null 2>&1 && ! pgrep -x "Xorg" >/dev/null 2>&1; then
+        log_info "Ubuntu Server detectado sin servidor X11 activo."
+        log_info "Iniciando servidor X11 mediante xinit..."
 
-    # Permitir conexiones locales a X11
+        # Si xinit está disponible, lanzamos la sesión completa (rotación + matchbox + app)
+        if command -v xinit >/dev/null 2>&1; then
+            cd "$APP_DIR" || exit 1
+            # xinit arranca un servidor X exclusivo y ejecuta el script lanzador
+            exec xinit "$APP_DIR/iniciar_pantalla_vertical.sh" -- :0 -nocursor vt1
+        else
+            log_error "xinit no está instalado. Ejecuta: sudo apt install -y xinit xorg"
+            exit 1
+        fi
+    fi
+
+    # Si ya había un servidor X11 activo:
     xhost +local: >/dev/null 2>&1 || true
 
-    # Preparar rotación de pantalla si está habilitado y xrandr está presente
     if [ "$ENABLE_GUI_ROTATION" = "1" ] && command -v xrandr >/dev/null 2>&1; then
         sleep 1
         PANTALLA=$(xrandr | grep " connected" | cut -d' ' -f1 | head -n1 || true)
@@ -186,7 +190,6 @@ lanzar_aplicacion() {
         fi
     fi
 
-    # Gestor de ventanas ligero si existe
     if command -v matchbox-window-manager >/dev/null 2>&1; then
         if ! pgrep -x "matchbox-window-manager" >/dev/null 2>&1; then
             log_info "Lanzando matchbox-window-manager..."
@@ -200,7 +203,6 @@ lanzar_aplicacion() {
     }
 
     log_info "Ejecutando main.py..."
-    # Usamos exec para que systemd monitoree directamente el proceso python
     exec python3 "$APP_DIR/main.py"
 }
 
