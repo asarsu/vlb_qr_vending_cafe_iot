@@ -158,11 +158,27 @@ lanzar_aplicacion() {
     log_info "Todas las conexiones de red y túneles están confirmadas."
     log_info "Iniciando entorno gráfico y aplicación principal en: $APP_DIR"
 
-    export DISPLAY="$DISPLAY_VALUE"
+    export DISPLAY="${DISPLAY_VALUE:-:0}"
+    export XAUTHORITY="${XAUTHORITY:-/home/pi/.Xauthority}"
+
+    # Esperar activamente a que el servidor de video X11 esté listo (hasta 30 segundos)
+    local x_intento=1
+    while [ "$x_intento" -le 30 ]; do
+        if xset q >/dev/null 2>&1 || xhost >/dev/null 2>&1; then
+            log_info "Servidor X11 detectado y accesible en $DISPLAY."
+            break
+        fi
+        log_warn "Esperando a que el servidor X11 esté disponible (intento $x_intento/30)..."
+        sleep 1
+        x_intento=$((x_intento + 1))
+    done
+
+    # Permitir conexiones locales a X11
+    xhost +local: >/dev/null 2>&1 || true
 
     # Preparar rotación de pantalla si está habilitado y xrandr está presente
     if [ "$ENABLE_GUI_ROTATION" = "1" ] && command -v xrandr >/dev/null 2>&1; then
-        sleep 2
+        sleep 1
         PANTALLA=$(xrandr | grep " connected" | cut -d' ' -f1 | head -n1 || true)
         if [ -n "$PANTALLA" ]; then
             log_info "Configurando rotación vertical para display '$PANTALLA'..."
