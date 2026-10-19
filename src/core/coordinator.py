@@ -93,7 +93,7 @@ class VendingCoordinator:
             print("[FLUJO] Fallo la generación de QR por conexión/servicio bancario. Mostrando pantalla de error.")
             self.log_manager.guardar_log_ciclo(motivo="fallo_generacion_qr", alias=alias or "sin_alias")
             self.state.set_estado("ERROR_CONEXION_BANCO")
-            time.sleep(4.0)
+            time.sleep(6.0)
             self.state.set_estado("BIENVENIDA")
             return
 

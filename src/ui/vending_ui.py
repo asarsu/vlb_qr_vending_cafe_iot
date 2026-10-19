@@ -333,8 +333,8 @@ class VendingUI:
         self.canvas.create_oval(cx - 45, 120, cx + 45, 210, fill=self.ROJO_SUAVE, outline=self.ROJO, width=3, tags="dinamico")
         self._t(cx, 165, "!", 46, self.ROJO, bold=True)
 
-        self._t(cx, 255, "Medio de pago no disponible", 24, self.ROJO, bold=True)
-        self._t(cx, 295, "No se pudo conectar con el banco", 16, self.MUTED)
+        self._t(cx, 255, "Medio de pago\nno disponible", 24, self.ROJO, bold=True)
+        self._t(cx, 300, "No se pudo conectar con el banco", 16, self.MUTED)
 
         # Tarjeta informativa central
         self._tarjeta(30, 350, 450, 560, fill=self.TARJETA, outline=self.BORDE, width=2, r=20)
