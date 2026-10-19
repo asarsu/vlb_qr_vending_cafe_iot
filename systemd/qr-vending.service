@@ -1,0 +1,45 @@
+[Unit]
+Description=Kiosco QR Vending - Servicio de Arranque y Supervisión
+After=network-online.target time-sync.target
+Wants=network-online.target
+# Si se utiliza un servicio para túneles (ej. cloudflared.service), se puede enlazar aquí:
+# After=cloudflared.service
+# Wants=cloudflared.service
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+
+# Directorio de trabajo
+WorkingDirectory=/home/pi/python_localQR_v2.1
+
+# Variables de entorno críticas
+Environment="PYTHONUNBUFFERED=1"
+Environment="DISPLAY=:0"
+Environment="XAUTHORITY=/home/pi/.Xauthority"
+# EnvironmentFile opcional si se desea cargar variables de .env
+EnvironmentFile=-/home/pi/python_localQR_v2.1/.env
+
+# Script con validación de conectividad a internet, túnel QR y SSH
+ExecStart=/home/pi/python_localQR_v2.1/scripts/check_and_run.sh
+
+# Política de autoreinicio y tolerancia a fallos
+Restart=always
+RestartSec=5s
+
+# Umbral de reinicio por saturación (evita bucles descontrolados en fallos críticos de hardware)
+StartLimitIntervalSec=120s
+StartLimitBurst=10
+
+# Configuración de Journalctl y salida estándar
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=qr-vending
+
+# Permisos y seguridad básica
+KillMode=mixed
+TimeoutStopSec=10s
+
+[Install]
+WantedBy=graphical.target

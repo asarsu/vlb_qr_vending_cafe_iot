@@ -11,5 +11,6 @@ xrandr --output "$PANTALLA" --rotate right
 # Lanzamos el micro-gestor de ventanas en segundo plano (OBLIGATORIO EL & AL FINAL)
 matchbox-window-manager -use_titlebar no &
 
-# Lanzamos tu interfaz gráfica (Modular v2.0)
-exec python3 /home/pi/python_localQR_v2.0/main.py
+# Lanzamos tu interfaz gráfica (Modular v2.1)
+DIR_PROYECTO="$(cd "$(dirname "$0")" && pwd)"
+exec python3 "$DIR_PROYECTO/main.py"

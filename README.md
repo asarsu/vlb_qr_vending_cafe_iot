@@ -63,10 +63,35 @@ python3 qr01_univalle_snakky_v1.4.py
 ```
 
 ### 4. Ejecución en Kiosco / Pantalla Vertical (Raspberry Pi)
-El script [`iniciar_pantalla_vertical.sh`](file:///home/andres/Documentos/Proyecto-QR-2025/python_localQR_v2.0/iniciar_pantalla_vertical.sh) rota la pantalla e inicializa el gestor de ventanas liviano antes de ejecutar `main.py`:
+El script [`iniciar_pantalla_vertical.sh`](file:///home/andres/Documentos/Proyecto-QR-2025/python_localQR_v2.1/iniciar_pantalla_vertical.sh) rota la pantalla e inicializa el gestor de ventanas liviano antes de ejecutar `main.py`:
 ```bash
 bash iniciar_pantalla_vertical.sh
 ```
+
+### 5. Arranque Automático y Watchdog (systemd)
+El proyecto incluye un servicio systemd y un script comprobador (`scripts/check_and_run.sh`) que verifica la conectividad a Internet y la disponibilidad de los túneles a `qr01.vendingbolivia.com` (webhook Visa) y `ssh-qr01.vendingbolivia.com` (acceso remoto) antes de arrancar.
+
+#### Instalación del servicio en Raspberry Pi:
+```bash
+sudo cp systemd/qr-vending.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable qr-vending.service
+sudo systemctl start qr-vending.service
+```
+
+#### Monitoreo y diagnóstico con `journalctl`:
+- **Ver logs en tiempo real (seguimiento):**
+  ```bash
+  journalctl -u qr-vending.service -f
+  ```
+- **Ver únicamente errores y fallos:**
+  ```bash
+  journalctl -u qr-vending.service -p err -e
+  ```
+- **Ver los logs desde el último arranque del sistema:**
+  ```bash
+  journalctl -u qr-vending.service -b
+  ```
 
 ---
 
