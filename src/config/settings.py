@@ -11,6 +11,9 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class AppConfig:
+    # Entorno operativo (0 = producción / quiosco seguro, 1 = desarrollo local)
+    dev_mode: bool = os.getenv("DEV_MODE", "0") in ("1", "true", "True")
+
     # Dimensiones de pantalla
     screen_w: int = int(os.getenv("SCREEN_W", "480"))
     screen_h: int = int(os.getenv("SCREEN_H", "800"))

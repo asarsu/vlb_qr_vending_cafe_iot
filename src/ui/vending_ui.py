@@ -87,7 +87,8 @@ class VendingUI:
 
         self.root.attributes("-fullscreen", True)
         self.root.config(cursor="none")
-        self.root.bind("<Escape>", lambda e: self.root.destroy())
+        if self.config.dev_mode:
+            self.root.bind("<Escape>", lambda e: self.root.destroy())
 
         self.canvas = tk.Canvas(
             self.root, width=self.config.screen_w, height=self.config.screen_h, highlightthickness=0

@@ -14,6 +14,7 @@ class TestStateAndConfig(unittest.TestCase):
 
     def test_app_config_defaults(self):
         config = AppConfig()
+        self.assertFalse(config.dev_mode)
         self.assertEqual(config.screen_w, 480)
         self.assertEqual(config.screen_h, 800)
         self.assertEqual(config.monto_inicial_bs, 5.00)
