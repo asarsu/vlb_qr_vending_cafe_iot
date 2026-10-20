@@ -17,7 +17,6 @@ Detiene la aplicación y apaga la interfaz gráfica de inmediato.
 (Permanece detenida hasta que la inicies manualmente o se reinicie la Raspberry Pi).
   
 sudo systemctl stop qr-vending.service
-
 --------------------------------------------------------------------------------
 2. VOLVER A INICIAR LA APLICACIÓN
 --------------------------------------------------------------------------------
