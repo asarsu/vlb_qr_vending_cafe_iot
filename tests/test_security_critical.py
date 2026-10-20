@@ -11,6 +11,7 @@ from unittest.mock import MagicMock
 from src.config.settings import AppConfig
 from src.core.state import VendingState
 from src.core.coordinator import VendingCoordinator
+from src.hardware.mdb_protocol import MdbSecurityController
 from src.payment.webhook_server import WebhookServer
 
 
@@ -67,6 +68,12 @@ class TestSecurityCritical(unittest.TestCase):
         aceptado = self.coordinator.on_webhook_pago_recibido("VEND_100")
         self.assertTrue(aceptado)
         self.assertTrue(self.state.pago_confirmado_flag)
+
+    def test_mdb_rejects_unreadable_price_vend_request(self):
+        """Verifica que el MdbSecurityController retorne None en precio si la trama no tiene los 8 chars de precio+item."""
+        codigo, precio, centavos = MdbSecurityController.parsear_vend_request("1300", "")
+        self.assertIsNone(precio)
+        self.assertIsNone(centavos)
 
     def test_webhook_server_authentication_and_routing(self):
         """Verifica que el servidor Flask rechace peticiones sin autenticación o con alias erróneo."""

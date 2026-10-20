@@ -202,8 +202,21 @@ class VendingCoordinator:
                             self.state.codigo_producto_actual = cod
                         credito_actual = self.state.credito_disponible
 
-                    centavos_disponibles = int(round(credito_actual * 100))
-                    precio_en_centavos = centavos_vmc if centavos_vmc is not None else centavos_disponibles
+                    # Candado de Seguridad Estricto:
+                    # Si no se pudo decodificar el precio real de la trama 1300, denegar por seguridad
+                    if centavos_vmc is None:
+                        print(f"[MDB CANDADO ERROR] Trama 1300 corrupta o sin precio legible. ¡DENEGADO!")
+                        self.serial_driver.enviar_hex("0606")  # Vend Denied
+                        time.sleep(0.15)
+                        self.serial_driver.enviar_hex("0707")
+                        time.sleep(0.2)
+                        trama_reset = MdbSecurityController.calcular_trama_credito(credito_actual)
+                        self.serial_driver.enviar_hex(trama_reset)
+                        with self.state.lock:
+                            self.state.mensaje_alerta = "Error de comunicación con máquina.\nPor favor digita nuevamente."
+                        continue
+
+                    precio_en_centavos = centavos_vmc
                     precio_final = round(precio_en_centavos / 100.0, 2)
 
                     with self.state.lock:
@@ -211,7 +224,7 @@ class VendingCoordinator:
 
                     print(f"[MDB SEGURIDAD] Producto: #{cod} | Precio: Bs {precio_final:.2f} ({precio_en_centavos} cts) | Saldo: Bs {credito_actual:.2f} ({centavos_disponibles} cts)")
 
-                    # Candado de Seguridad Estricto: El precio debe ser exactamente igual al monto abonado
+                    # El precio debe ser exactamente igual al monto abonado
                     if precio_en_centavos != centavos_disponibles:
                         if precio_en_centavos > centavos_disponibles:
                             print(f"[MDB CANDADO] ¡DENEGADO! Costo {precio_final:.2f} > Saldo {credito_actual:.2f}")

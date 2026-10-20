@@ -29,6 +29,8 @@ class WebhookServer:
         self.secret_token = secret_token
         if FLASK_DISPONIBLE:
             self.app = Flask("WebhookServer")
+            # Limitar tamaño máximo de payload entrante a 64 KB (protección contra DoS por memoria)
+            self.app.config["MAX_CONTENT_LENGTH"] = 64 * 1024
             self._setup_routes()
         else:
             self.app = None
