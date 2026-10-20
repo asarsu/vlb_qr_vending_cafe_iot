@@ -47,6 +47,26 @@ class LogManager:
         with self._lock:
             self._buffer = io.StringIO()
 
+    def _purgar_logs_antiguos(self, max_archivos: int = 200):
+        """Mantiene acotado el número de archivos de logs en disco para proteger la tarjeta SD."""
+        try:
+            archivos = [
+                os.path.join(self.logs_dir, f)
+                for f in os.listdir(self.logs_dir)
+                if f.startswith("log_") and f.endswith(".txt")
+            ]
+            if len(archivos) > max_archivos:
+                # Ordenar por fecha de modificación (los más antiguos primero)
+                archivos.sort(key=os.path.getmtime)
+                cuantos_eliminar = len(archivos) - max_archivos
+                for f_antiguo in archivos[:cuantos_eliminar]:
+                    try:
+                        os.remove(f_antiguo)
+                    except OSError:
+                        pass
+        except Exception:
+            pass
+
     def guardar_log_ciclo(self, motivo: str = "fin_ciclo", alias: str = "sin_alias"):
         with self._lock:
             contenido = self._buffer.getvalue()
@@ -66,5 +86,6 @@ class LogManager:
                 f.write("=" * 38 + "\n\n")
                 f.write(contenido)
             print(f"[LOGS] Log guardado con éxito: {ruta_archivo}")
+            self._purgar_logs_antiguos(max_archivos=200)
         except Exception as e:
             print(f"[LOGS] Error al guardar archivo de log: {e}")

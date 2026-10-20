@@ -78,7 +78,9 @@ class WebhookServer:
                 return jsonify({"codigo": "9999", "mensaje": "No autorizado"}), 401
 
             datos = flask_request.get_json(silent=True) or {}
-            print(f"\n[WEBHOOK RECIBIDO]: {datos}")
+            alias_log = datos.get("alias", "sin_alias")
+            monto_log = datos.get("monto", "N/A")
+            print(f"\n[WEBHOOK RECIBIDO] Alias: {alias_log} | Monto: {monto_log}")
 
             alias = datos.get("alias", "")
             if not alias or not isinstance(alias, str):

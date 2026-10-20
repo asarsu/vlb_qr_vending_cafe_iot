@@ -77,10 +77,11 @@ class BisaApiClient:
         try:
             print(f"[API QR] Solicitando QR para Bs {monto:.2f} | Alias: {alias_dinamico} | Callback: {self.config.webhook_callback_url}")
             resp = requests.post(url, headers=headers, data=json.dumps(payload), timeout=10)
-            print(f"[API QR] Status: {resp.status_code} | Respuesta: {resp.text}")
+            print(f"[API QR] Status: {resp.status_code}")
             if resp.status_code == 200:
                 data = resp.json()
                 if data.get("codigo") == "0000":
+                    print(f"[API QR] QR generado con éxito (idQr: {data.get('objeto', {}).get('idQr')})")
                     return data["objeto"]["imagenQr"], alias_dinamico
                 else:
                     print(f"[API QR ERROR] Error de servicio banco BISA: {data.get('mensaje')} (código: {data.get('codigo')})")
@@ -89,7 +90,7 @@ class BisaApiClient:
                 if self.obtener_token():
                     return self.generar_qr(monto)
             else:
-                print(f"[API QR ERROR] Código HTTP inesperado: {resp.status_code} - {resp.text}")
+                print(f"[API QR ERROR] Código HTTP inesperado: {resp.status_code}")
         except Exception as e:
             print(f"[API ERROR] Excepción de conexión en generaQr: {e}")
 
@@ -115,15 +116,16 @@ class BisaApiClient:
             resp = requests.post(url, headers=headers, json=payload, timeout=10)
             if resp.status_code == 200:
                 data = resp.json()
-                print(f"[API POLLING] estadoTransaccion: {data}")
-                if data.get("codigo") == "0000":
+                codigo_bisa = data.get("codigo")
+                if codigo_bisa == "0000":
                     obj = data.get("objeto") or {}
                     estado = obj.get("estadoActual")
+                    print(f"[API POLLING] estadoTransaccion alias {alias}: {estado}")
                     if estado == "PENDIENTE":
                         return False, True
                     elif estado == "PAGADO":
                         return True, False
-                elif data.get("codigo") == "9999":
+                elif codigo_bisa == "9999":
                     if bandera_pendiente:
                         print("[API POLLING] Transición PENDIENTE -> 9999: ¡Pago aprobado!")
                         return True, False
