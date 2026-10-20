@@ -17,12 +17,13 @@ class AppConfig:
 
     # API BISA / SIP
     bisa_base_url: str = os.getenv("BISA_BASE_URL", "https://dev-sip.mc4.com.bo:8443")
-    api_key_auth: str = os.getenv("BISA_API_KEY_AUTH", "220d2a3723526ad0c8dcae161b0556ac2bb026e7212eabf6")
-    username: str = os.getenv("BISA_USERNAME", "SARMIENTODEV")
-    password: str = os.getenv("BISA_PASSWORD", "11111111")
-    apikey_servicio: str = os.getenv("BISA_APIKEY_SERVICIO", "585854e45b0d5b17164d0fe8c0f9c2ccb36f15aed4f8e27d")
+    api_key_auth: str = os.getenv("BISA_API_KEY_AUTH", "")
+    username: str = os.getenv("BISA_USERNAME", "")
+    password: str = os.getenv("BISA_PASSWORD", "")
+    apikey_servicio: str = os.getenv("BISA_APIKEY_SERVICIO", "")
     webhook_callback_url: str = os.getenv("WEBHOOK_CALLBACK_URL", "https://qr01.vendingbolivia.com/api/pagos/callback")
     webhook_port: int = int(os.getenv("WEBHOOK_PORT", "5000"))
+    webhook_secret_token: str = os.getenv("WEBHOOK_SECRET_TOKEN", "")
 
     # MDB / Serial
     serial_port: str = os.getenv("SERIAL_PORT", "/dev/ttyUSB0")

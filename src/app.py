@@ -58,6 +58,7 @@ class VendingApplication:
         self.webhook_server = WebhookServer(
             port=self.config.webhook_port,
             on_payment_callback=self.coordinator.on_webhook_pago_recibido,
+            secret_token=self.config.webhook_secret_token,
         )
 
         # 5. Interfaz de usuario Tkinter

@@ -67,14 +67,31 @@ class VendingCoordinator:
                 self.state.set_estado("GENERANDO")
                 threading.Thread(target=self.ejecutar_flujo_compra, daemon=True).start()
 
-    def on_webhook_pago_recibido(self, alias_recibido: str):
+    def on_webhook_pago_recibido(self, alias_recibido: str) -> bool:
+        """
+        Valida que el callback recibido pertenezca a la compra en curso.
+        Retorna True si fue aceptado, False si fue rechazado por no coincidir o estar fuera de sesión.
+        """
         with self.state.lock:
+            estado = self.state.estado_maquina
             alias_actual = self.state.alias_actual
-            if alias_actual and alias_recibido == alias_actual:
-                print(f"[WEBHOOK] ¡Alias {alias_recibido} validado con éxito!")
-            else:
-                print("[WEBHOOK] Alias no coincide o sin alias previo — aprobando pago.")
+
+            # Validar que la máquina esté esperando el pago activamente
+            if estado != "MOSTRANDO":
+                print(f"[WEBHOOK SEGURIDAD] Rechazado: Máquina no está en estado MOSTRANDO (actual: {estado}).")
+                return False
+
+            # Validar que exista un alias activo y que coincida exactamente
+            if not alias_actual or alias_recibido != alias_actual:
+                print(
+                    f"[WEBHOOK SEGURIDAD] ¡DENEGADO! Alias recibido '{alias_recibido}' "
+                    f"no coincide con la sesión activa '{alias_actual}'."
+                )
+                return False
+
+            print(f"[WEBHOOK] ¡Alias {alias_recibido} validado con éxito para sesión activa!")
             self.state.pago_confirmado_flag = True
+            return True
 
     def ejecutar_flujo_compra(self):
         """Ciclo completo de compra: Generar QR -> Esperar Pago -> Inyectar MDB."""
