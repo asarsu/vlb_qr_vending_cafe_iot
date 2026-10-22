@@ -76,17 +76,23 @@ class VendingCoordinator:
             estado = self.state.estado_maquina
             alias_actual = self.state.alias_actual
 
-            # Validar que la máquina esté esperando el pago activamente
-            if estado != "MOSTRANDO":
-                print(f"[WEBHOOK SEGURIDAD] Rechazado: Máquina no está en estado MOSTRANDO (actual: {estado}).")
-                return False
-
             # Validar que exista un alias activo y que coincida exactamente
             if not alias_actual or alias_recibido != alias_actual:
                 print(
                     f"[WEBHOOK SEGURIDAD] ¡DENEGADO! Alias recibido '{alias_recibido}' "
                     f"no coincide con la sesión activa '{alias_actual}'."
                 )
+                return False
+
+            # Si ya se aprobó por polling y la máquina está despachando/entregando este mismo alias,
+            # responder exitoso (idempotencia) para que el banco registre 200 OK
+            if estado in ("DESPACHANDO", "ENTREGANDO"):
+                print(f"[WEBHOOK] Alias {alias_recibido} ya en curso/despachando. Confirmación redundante aceptada.")
+                return True
+
+            # Validar que la máquina esté esperando el pago activamente
+            if estado != "MOSTRANDO":
+                print(f"[WEBHOOK SEGURIDAD] Rechazado: Máquina no está en estado MOSTRANDO (actual: {estado}).")
                 return False
 
             print(f"[WEBHOOK] ¡Alias {alias_recibido} validado con éxito para sesión activa!")
@@ -218,6 +224,7 @@ class VendingCoordinator:
 
                     precio_en_centavos = centavos_vmc
                     precio_final = round(precio_en_centavos / 100.0, 2)
+                    centavos_disponibles = int(round(credito_actual * 100))
 
                     with self.state.lock:
                         self.state.precio_producto_actual = precio_final
