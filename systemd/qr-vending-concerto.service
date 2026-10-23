@@ -1,5 +1,5 @@
 [Unit]
-Description=Kiosco QR Vending - Servicio de Arranque y Supervisión
+Description=Kiosco QR Vending - Servicio de Arranque y Supervisión (Necta Concerto - Prod)
 After=network-online.target time-sync.target
 Wants=network-online.target
 StartLimitIntervalSec=120s
@@ -11,16 +11,16 @@ User=pi
 Group=pi
 SupplementaryGroups=video tty input dialout
 
-# Directorio de trabajo (en la Raspberry Pi)
-WorkingDirectory=/home/pi/python_localQR_autoStart
+# Directorio de trabajo en la Raspberry Pi
+WorkingDirectory=/home/pi/python_localQR_concerto_v1.0
 
 # Variables de entorno críticas
 Environment="PYTHONUNBUFFERED=1"
 Environment="DISPLAY=:0"
-EnvironmentFile=-/home/pi/python_localQR_autoStart/.env
+EnvironmentFile=-/home/pi/python_localQR_concerto_v1.0/.env
 
 # Script con validación de conectividad a internet, túnel QR, SSH y X11
-ExecStart=/home/pi/python_localQR_autoStart/scripts/check_and_run.sh
+ExecStart=/home/pi/python_localQR_concerto_v1.0/scripts/check_and_run.sh
 
 # Política de autoreinicio y tolerancia a fallos
 Restart=always
@@ -29,7 +29,7 @@ RestartSec=5s
 # Configuración de Journalctl y salida estándar
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=qr-vending
+SyslogIdentifier=qr-vending-concerto
 
 # Permisos y seguridad básica
 KillMode=mixed

@@ -73,24 +73,24 @@ El proyecto incluye un servicio systemd y un script comprobador (`scripts/check_
 
 #### Instalación del servicio en Raspberry Pi:
 ```bash
-sudo cp systemd/qr-vending.service /etc/systemd/system/
+sudo cp systemd/qr-vending-concerto.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable qr-vending.service
-sudo systemctl start qr-vending.service
+sudo systemctl enable qr-vending-concerto.service
+sudo systemctl start qr-vending-concerto.service
 ```
 
 #### Monitoreo y diagnóstico con `journalctl`:
 - **Ver logs en tiempo real (seguimiento):**
   ```bash
-  journalctl -u qr-vending.service -f
+  journalctl -u qr-vending-concerto.service -f
   ```
 - **Ver únicamente errores y fallos:**
   ```bash
-  journalctl -u qr-vending.service -p err -e
+  journalctl -u qr-vending-concerto.service -p err -e
   ```
 - **Ver los logs desde el último arranque del sistema:**
   ```bash
-  journalctl -u qr-vending.service -b
+  journalctl -u qr-vending-concerto.service -b
   ```
 
 ---

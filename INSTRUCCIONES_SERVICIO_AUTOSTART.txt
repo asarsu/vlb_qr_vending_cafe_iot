@@ -3,7 +3,7 @@ GUIA DE CONTROL Y MONITOREO DEL SERVICIO AUTO-START (KIOSCO QR VENDING)
 ================================================================================
 
 El servicio está gestionado como un demonio systemd bajo el nombre:
-  qr-vending.service
+  qr-vending-concerto.service
 
 Dado que está configurado con política de autorrecuperación ("Restart=always"),
 cerrar o matar la ventana de Python hará que el sistema la vuelva a levantar
@@ -16,13 +16,13 @@ usar los comandos de systemctl.
 Detiene la aplicación y apaga la interfaz gráfica de inmediato.
 (Permanece detenida hasta que la inicies manualmente o se reinicie la Raspberry Pi).
   
-sudo systemctl stop qr-vending.service
+sudo systemctl stop qr-vending-concerto.service
 --------------------------------------------------------------------------------
 2. VOLVER A INICIAR LA APLICACIÓN
 --------------------------------------------------------------------------------
 Ejecuta las validaciones de red, túneles y levanta la pantalla gráfica:
 
-  sudo systemctl start qr-vending.service
+  sudo systemctl start qr-vending-concerto.service
 
 
 --------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ Ejecuta las validaciones de red, túneles y levanta la pantalla gráfica:
 --------------------------------------------------------------------------------
 Útil si actualizaste el código o la configuración y deseas reiniciar el ciclo completo:
 
-  sudo systemctl restart qr-vending.service
+  sudo systemctl restart qr-vending-concerto.service
 
 
 --------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ Ejecuta las validaciones de red, túneles y levanta la pantalla gráfica:
 --------------------------------------------------------------------------------
 Muestra si está activa (active/running), detenida (inactive/dead) o con errores:
 
-  sudo systemctl status qr-vending.service
+  sudo systemctl status qr-vending-concerto.service
 
 
 --------------------------------------------------------------------------------
@@ -48,12 +48,12 @@ Si vas a realizar tareas de mantenimiento, desarrollo o calibración y NO quiere
 que la app se abra sola al encender o reiniciar la Raspberry Pi:
 
   # Detenerla ahora y evitar que arranque al reiniciar:
-  sudo systemctl stop qr-vending.service
-  sudo systemctl disable qr-vending.service
+  sudo systemctl stop qr-vending-concerto.service
+  sudo systemctl disable qr-vending-concerto.service
 
   # Cuando termines y quieras volver a activar el auto-arranque permanente:
-  sudo systemctl enable qr-vending.service
-  sudo systemctl start qr-vending.service
+  sudo systemctl enable qr-vending-concerto.service
+  sudo systemctl start qr-vending-concerto.service
 
 
 --------------------------------------------------------------------------------
@@ -62,15 +62,15 @@ que la app se abra sola al encender o reiniciar la Raspberry Pi:
 Todos los eventos, validaciones y salidas de error quedan registrados en systemd:
 
   a) Ver logs en tiempo real (seguimiento en vivo mientras corre):
-     journalctl -u qr-vending.service -f
+     journalctl -u qr-vending-concerto.service -f
 
   b) Ver únicamente los registros de errores y fallos:
-     journalctl -u qr-vending.service -p err -e
+     journalctl -u qr-vending-concerto.service -p err -e
 
   c) Ver todo el historial desde el último encendido/reinicio de la Raspberry:
-     journalctl -u qr-vending.service -b
+     journalctl -u qr-vending-concerto.service -b
 
   d) Ver las últimas 100 líneas del log:
-     journalctl -u qr-vending.service -n 100 --no-pager
+     journalctl -u qr-vending-concerto.service -n 100 --no-pager
 
 ================================================================================
