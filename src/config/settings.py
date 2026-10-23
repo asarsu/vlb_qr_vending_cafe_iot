@@ -9,6 +9,33 @@ import os
 from dataclasses import dataclass
 
 
+def _cargar_env_local():
+    """Carga variables desde .env si existe, sin requerir librerías externas como python-dotenv."""
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    env_path = os.path.join(base_dir, ".env")
+    if os.path.isfile(env_path):
+        try:
+            with open(env_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    k, v = line.split("=", 1)
+                    k = k.strip()
+                    v = v.split("#", 1)[0].strip()
+                    if v.startswith('"') and v.endswith('"'):
+                        v = v[1:-1]
+                    elif v.startswith("'") and v.endswith("'"):
+                        v = v[1:-1]
+                    if k not in os.environ:
+                        os.environ[k] = v
+        except Exception:
+            pass
+
+
+_cargar_env_local()
+
+
 def _get_clean_env(key: str, default: str = "") -> str:
     """Obtiene variable de entorno eliminando comentarios inline (#...) y espacios."""
     val = os.getenv(key, default)

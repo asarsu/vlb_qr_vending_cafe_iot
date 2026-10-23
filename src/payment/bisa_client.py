@@ -43,6 +43,10 @@ class BisaApiClient:
                         self._token = data["objeto"]["token"]
                     print("[API] Token Bearer obtenido exitosamente.")
                     return True
+                else:
+                    print(f"[API ERROR] Token rechazo con respuesta: {data.get('mensaje')} (codigo: {data.get('codigo')})")
+            else:
+                print(f"[API ERROR] Token HTTP {resp.status_code}: {resp.text}")
         except Exception as e:
             print(f"[API ERROR] Falla obteniendo token: {e}")
         return False
