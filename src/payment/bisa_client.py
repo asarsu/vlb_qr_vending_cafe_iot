@@ -66,7 +66,7 @@ class BisaApiClient:
         payload = {
             "monto": monto,
             "moneda": "BOB",
-            "detalleGlosa": "Vending Snakky Univalle",
+            "detalleGlosa": self.config.detalle_glosa,
             "alias": alias_dinamico,
             "unicoUso": True,
             "fechaVencimiento": vencimiento,

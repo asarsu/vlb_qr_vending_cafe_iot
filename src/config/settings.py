@@ -48,6 +48,7 @@ class AppConfig:
     monto_inicial_bs: float = float(_get_clean_env("MONTO_INICIAL_BS", "5.00"))
     timeout_pago_segundos: int = int(_get_clean_env("TIMEOUT_PAGO_SEGUNDOS", "180"))
     timeout_vmc_segundos: int = int(_get_clean_env("TIMEOUT_VMC_SEGUNDOS", "120"))
+    detalle_glosa: str = _get_clean_env("DETALLE_GLOSA", "Vending Cafe Concerto")
 
     # Rutas relativas del proyecto
     base_dir: str = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))

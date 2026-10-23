@@ -236,16 +236,16 @@ class VendingCoordinator:
                         if precio_en_centavos > centavos_disponibles:
                             print(f"[MDB CANDADO] ¡DENEGADO! Costo {precio_final:.2f} > Saldo {credito_actual:.2f}")
                             mensaje_error = (
-                                f"¡Producto #{cod} cuesta Bs. {precio_final:.2f}!\n"
+                                f"¡La bebida #{cod} cuesta Bs. {precio_final:.2f}!\n"
                                 f"Tu saldo es: Bs. {credito_actual:.2f}\n"
-                                f"Elige un producto de Bs. {credito_actual:.2f}"
+                                f"Elige una opción de Bs. {credito_actual:.2f}"
                             )
                         else:
                             print(f"[MDB CANDADO] ¡DENEGADO! Costo {precio_final:.2f} < Saldo {credito_actual:.2f}")
                             mensaje_error = (
-                                f"¡Producto #{cod} cuesta Bs. {precio_final:.2f}!\n"
+                                f"¡La bebida #{cod} cuesta Bs. {precio_final:.2f}!\n"
                                 f"Tu saldo es: Bs. {credito_actual:.2f}\n"
-                                f"Debes elegir un producto de exactamente Bs. {credito_actual:.2f}"
+                                f"Debes elegir una opción de exactamente Bs. {credito_actual:.2f}"
                             )
 
                         self.serial_driver.enviar_hex("0606")  # Vend Denied

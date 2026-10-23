@@ -70,12 +70,12 @@ class VendingUI:
     BTN_COMPRAR_X1, BTN_COMPRAR_Y1 = 460, 750
 
     PASOS = (
-        "Elige tu producto en la vitrina.",
-        "Escanea el QR con tu app bancaria y paga el monto exacto.",
+        "Elige tu bebida en el menú de la máquina.",
+        "Abre tu app de pagos preferida, escanea el QR y paga.",
         "Espera la confirmación del crédito en esta pantalla.",
-        "Digita el código del producto en la botonera.",
-        "Espera a que el producto caiga a la bandeja.",
-        "Abre la compuerta y retira tu producto.",
+        "Presiona el botón de tu bebida en la máquina Concerto.",
+        "Espera la preparación y llenado de tu vaso.",
+        "Retira tu café en el compartimiento y ¡disfrútalo!",
     )
 
     def __init__(self, root: "tk.Tk", config: AppConfig, state: VendingState,
@@ -231,10 +231,10 @@ class VendingUI:
         if self.logo_principal:
             self.canvas.create_image(cx, 135, image=self.logo_principal, tags="dinamico")
         else:
-            self._t(cx, 135, "[ LOGO SNAKKY ]", 16, bold=True)
+            self._t(cx, 135, "[ LOGO CONCERTO ]", 16, bold=True)
 
         self._t(cx, 275, "PAGA CON QR", 36, self.CORAL_OSCURO, bold=True)
-        self._t(cx, 330, "Tu antojito en menos de 30 segundos", 16, self.MUTED, width=400, justify="center")
+        self._t(cx, 330, "Tu café recién preparado en segundos", 16, self.MUTED, width=400, justify="center")
 
         self._tarjeta(100, 390, 380, 590, r=24)
         if self.qr_icon:
@@ -301,10 +301,10 @@ class VendingUI:
             self._t(cx, 475, alerta, 14, self.ROJO, justify="center", width=380)
         else:
             self._tarjeta(30, 375, 450, 535, outline=self.VERDE, width=3)
-            self._t(cx, 425, "Digita el código del producto", 18, bold=True, width=380, justify="center")
-            self._t(cx, 475, "en la botonera de la máquina", 15, self.MUTED)
+            self._t(cx, 425, "Presiona el botón de tu bebida", 18, bold=True, width=380, justify="center")
+            self._t(cx, 475, "en el panel de la máquina Concerto", 15, self.MUTED)
 
-        self._t(cx, 585, f"Elige un producto de hasta Bs. {credito:.2f}", 16, self.VERDE, bold=True)
+        self._t(cx, 585, f"Elige una opción de hasta Bs. {credito:.2f}", 16, self.VERDE, bold=True)
         self._t(cx, 640, "Esperando selección en la máquina…", 14, self.MUTED, italic=True)
 
     def _render_entregando(self, cx: int, s: dict):
@@ -313,14 +313,14 @@ class VendingUI:
         self._t(cx, 105, "¡Venta confirmada!", 28, self.VERDE, bold=True)
 
         self._tarjeta(50, 160, 430, 330, outline=self.VERDE, width=3)
-        self._t(cx, 192, "PRODUCTO SELECCIONADO", 12, self.MUTED, bold=True)
-        self._t(cx, 250, f"#{codigo}" if codigo else "DESPACHADO", 40, self.CORAL_OSCURO, bold=True)
+        self._t(cx, 192, "BEBIDA SELECCIONADA", 12, self.MUTED, bold=True)
+        self._t(cx, 250, f"#{codigo}" if codigo else "PREPARANDO", 40, self.CORAL_OSCURO, bold=True)
         if precio > 0:
             self._t(cx, 303, f"Precio cobrado: Bs. {precio:.2f}", 15, self.VERDE, bold=True)
 
         self._tarjeta(30, 365, 450, 545, fill=self.AMARILLO_SUAVE, outline=self.AMARILLO, width=3)
-        self._t(cx, 415, "RETIRE SU PRODUCTO", 24, self.AMARILLO_TEXTO, bold=True)
-        self._t(cx, 483, "Abre la bandeja inferior\nde la máquina para retirar tu compra",
+        self._t(cx, 415, "PREPARANDO BEBIDA", 24, self.AMARILLO_TEXTO, bold=True)
+        self._t(cx, 483, "Espera a que finalice la preparación\ny retira tu vaso del compartimiento",
                 16, self.AMARILLO_TEXTO, justify="center")
 
         if credito > 0:

@@ -1,15 +1,15 @@
-# vlb_qr_vending_iot — Kiosco QR Vending (Snakky)
+# vlb_qr_vending_iot — Kiosco QR Vending (Necta Concerto)
 
-Proyecto de implementación de pagos cashless (QR) para máquinas vending con protocolo MDB Waferstar y pagos QR Banco BISA / SIP (MC4). Arquitectura modular basada en principios **SOLID** y **Clean Architecture**.
+Proyecto de implementación de pagos cashless (QR) para máquinas vending de café caliente (Necta Concerto) con protocolo MDB Waferstar y pagos QR Banco BISA / SIP (MC4). Arquitectura modular basada en principios **SOLID** y **Clean Architecture**.
 
 ---
 
 ## 📁 Estructura del Proyecto
 
 ```text
-python_localQR_v2.0/
+python_localQR_concerto_v1.0/
 ├── main.py                       # Punto de entrada principal y ultra-limpio
-├── qr01_univalle_snakky_v1.4.py  # Wrapper de retrocompatibilidad
+├── qr01_univalle_concerto_v1.0.py # Wrapper de retrocompatibilidad
 ├── requirements.txt              # Dependencias pip
 ├── .env.example                  # Plantilla de variables de entorno
 ├── iniciar_pantalla_vertical.sh  # Script de inicio en Raspberry Pi (X11)
